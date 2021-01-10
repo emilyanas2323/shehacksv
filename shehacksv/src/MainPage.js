@@ -4,6 +4,8 @@ import axios from "axios";
 import { res, proposed } from "./data.js";
 import "./App.css";
 import { Link } from "react-router-dom";
+import { FaBookMedical } from 'react-icons/fa';
+import { IconContext } from "react-icons";
 
 class MainPage extends React.Component {
   render() {
@@ -17,13 +19,21 @@ class MainPage extends React.Component {
                   <div className="col-lg-12">
                     <div className="p-5">
                       <div className="text-center">
+                      <IconContext.Provider value={{
+                              size: "3em"
+                            }}
+                          >
+                            <FaBookMedical />
+                          </IconContext.Provider>
+                        <br></br>
+                        <br></br>
                         <h1 className="h4 text-gray-900 mb-4">
                           Welcome to DocLog!
                         </h1>
                         <hr/>
-                        <h1 className="h4 text-gray-900 mb-4">
+                        <h3 className="h5 text-gray-900 mb-4">
                           Are you a patient or a doctor?
-                        </h1>
+                        </h3>
                       </div>
 
                       <form className="user">
