@@ -4,8 +4,34 @@ import axios from "axios";
 import { res, proposed } from "./data.js";
 import "./SignUp.css";
 import { Link } from "react-router-dom";
+import { db } from "./firebaseConfig";
 
 class DoctorSignUp extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    console.log("handle click");
+    this.addNewDoctor();
+  }
+
+  addNewDoctor() {
+    var newDocRef = db.collection("Doctors").doc();
+    newDocRef.set({
+      doctorID: newDocRef.id,
+      firstName: document.getElementById('docname').value,
+      lastName: document.getElementById('doclastname').value,
+      email: document.getElementById('docEmail').value,
+      password: document.getElementById('docPassword').value,
+      assignedPatients: [],
+    }).catch(function (error) {
+      console.log("Error writing to document:", error);
+    });
+  }
+
   render() {
     return (
       <div className="container">
@@ -45,7 +71,7 @@ class DoctorSignUp extends React.Component {
                           <input
                             type="email"
                             className="form-control form-control-user"
-                            id="exampleInputEmail"
+                            id="docEmail"
                             aria-describedby="emailHelp"
                             placeholder="Enter Email Address..."
                           />
@@ -54,12 +80,12 @@ class DoctorSignUp extends React.Component {
                           <input
                             type="password"
                             className="form-control form-control-user"
-                            id="exampleInputPassword"
+                            id="docPassword"
                             placeholder="Password"
                           />
                         </div>
 
-                        <div className="form-group">
+                        {/* <div className="form-group">
                           <input
                             type="txt"
                             className="form-control form-control-user"
@@ -67,7 +93,7 @@ class DoctorSignUp extends React.Component {
                             aria-describedby="emailHelp"
                             placeholder="Doctor ID"
                           />
-                        </div>
+                        </div> */}
 
                         <div className="form-group">
                           <div className="custom-control custom-checkbox small">
@@ -87,6 +113,7 @@ class DoctorSignUp extends React.Component {
                         <Link
                           to="/doctordashboard"
                           className="btn btn-primary btn-user btn-block"
+                          onClick={this.handleClick}
                         >
                           Login
                         </Link>
