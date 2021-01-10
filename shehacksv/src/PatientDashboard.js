@@ -27,6 +27,7 @@ class PatientDashboard extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.location.data);
     const options = {
       method: "GET",
       url: "https://priaid-symptom-checker-v1.p.rapidapi.com/symptoms",
@@ -55,7 +56,7 @@ class PatientDashboard extends React.Component {
           options: res
       })*/
 
-    var docRef = db.collection("Patients").doc("ZqlHkyxyukrONHYZq2bH");
+    var docRef = db.collection("Patients").doc(this.props.location.data);
     docRef
       .get()
       .then((doc) => {
