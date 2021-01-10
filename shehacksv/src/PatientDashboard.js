@@ -9,11 +9,15 @@ class PatientDashboard extends React.Component {
 
         this.onSelect = this.onSelect.bind(this);
         this.onRemove = this.onRemove.bind(this);
+        this.onProposedSelect = this.onProposedSelect.bind(this);
+        this.onProposedRemove = this.onProposedRemove.bind(this);
         this.additionalSymptoms = this.additionalSymptoms.bind(this);
+        this.updateProposedSymptoms = this.updateProposedSymptoms.bind(this);
         
         this.state = {
             options: [],
             selectedSymptoms: [],
+            proposedSymptoms: []
         };
     }
 
@@ -28,22 +32,56 @@ class PatientDashboard extends React.Component {
         }
       };
       
-      /*axios.request(options)
-      .then(function (response) {
+      // axios request
+      axios.request(options)
+      .then((response) => {
           console.log(response.data);
-          res = response.data;
-          console.log(res)
           this.setState({
-            options: res
+            options: response.data
           });
       })
       .catch(function (error) {
           console.error(error);
-      });*/
-      console.log(res)
-      this.setState({
+      });
+
+      // using sample data
+      /*this.setState({
           options: res
-      })
+      })*/
+  }
+
+  updateProposedSymptoms(selectedSymptoms) {
+    let symptoms = "[";
+    selectedSymptoms.forEach((item) => {
+        symptoms += item.ID + ",";
+    })
+    symptoms = symptoms.substring(0, symptoms.length - 1)+ ']';
+    console.log(symptoms)
+    const options = {
+        method: 'GET',
+        url: 'https://priaid-symptom-checker-v1.p.rapidapi.com/symptoms/proposed',
+        params: {gender: 'female', year_of_birth: '1984', language: 'en-gb', symptoms: symptoms},
+        headers: {
+            'x-rapidapi-key': '71491ac6a2msh7ddcf0ac4b9fab3p189889jsn5cf483e878e0',
+            'x-rapidapi-host': 'priaid-symptom-checker-v1.p.rapidapi.com'
+        }
+    };
+        
+    // axios request
+    axios.request(options)
+    .then((response) => {
+    console.log(response.data);
+    this.setState({
+        proposedSymptoms: response.data
+    });
+    })
+    .catch(function (error) {
+        console.error(error);
+    });
+
+    /*this.setState({
+        proposedSymptoms: proposed
+    })*/
   }
 
   onSelect(selectedList, selectedItem) {
@@ -53,9 +91,10 @@ class PatientDashboard extends React.Component {
         selectedSymptoms: symptoms
     })
     console.log(symptoms)
-}
+    this.updateProposedSymptoms(symptoms);
+  }
 
-onRemove(selectedList, removedItem) {
+  onRemove(selectedList, removedItem) {
     let symptoms = this.state.selectedSymptoms;
     symptoms = symptoms.filter(function( obj ) {
         return obj.Name !== removedItem.Name;
@@ -64,38 +103,38 @@ onRemove(selectedList, removedItem) {
         selectedSymptoms: symptoms
     })
     console.log(symptoms)
-}
+    this.updateProposedSymptoms(symptoms);
+  }
+
+  onProposedSelect(selectedList, selectedItem) {
+    let symptoms = this.state.proposedSymptoms;
+    symptoms.push(selectedItem);
+    this.setState({
+        proposedSymptoms: symptoms
+    })
+    console.log(symptoms)
+  }
+
+  onProposedRemove(selectedList, removedItem) {
+    let symptoms = this.state.proposedSymptoms;
+    symptoms = symptoms.filter(function( obj ) {
+        return obj.Name !== removedItem.Name;
+    });
+    this.setState({
+        proposedSymptoms: symptoms
+    })
+    console.log(symptoms)
+  }
 
   additionalSymptoms() {
       if(this.state.selectedSymptoms.length > 0) {
-        let symptoms = [];
-        this.state.selectedSymptoms.forEach((item) => {
-            symptoms.push(item.ID);
-        })
-        console.log(symptoms)
-        const options = {
-            method: 'GET',
-            url: 'https://priaid-symptom-checker-v1.p.rapidapi.com/symptoms/proposed',
-            params: {gender: 'male', year_of_birth: '1984', language: 'en-gb', symptoms: ''+symptoms},
-            headers: {
-              'x-rapidapi-key': '71491ac6a2msh7ddcf0ac4b9fab3p189889jsn5cf483e878e0',
-              'x-rapidapi-host': 'priaid-symptom-checker-v1.p.rapidapi.com'
-            }
-          };
-          
-          /*axios.request(options).then(function (response) {
-              console.log(response.data);
-          }).catch(function (error) {
-              console.error(error);
-          });*/
-
           return(
             <div>
                 <p>Are you also experiencing any the below symptoms?</p>
                 <Multiselect
-                    options={this.state.options} // Options to display in the dropdown
-                    onSelect={this.onSelect} // Function will trigger on select event
-                    onRemove={this.onRemove} // Function will trigger on remove event
+                    options={this.state.proposedSymptoms} // Options to display in the dropdown
+                    onSelect={this.onProposedSelect} // Function will trigger on select event
+                    onRemove={this.onProposedRemove} // Function will trigger on remove event
                     displayValue="Name" // Property name to display in the dropdown options
                 />
             </div>
