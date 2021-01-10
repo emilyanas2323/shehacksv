@@ -182,6 +182,7 @@ class PatientDashboard extends React.Component {
 
   submitSymptoms() {
     let diagnosisId = []; 
+    let diagnosisName = [];
     let diagnosisRanking = [];
     let diagnosisAccuracy = [];
     let specialId = [];
@@ -231,6 +232,7 @@ class PatientDashboard extends React.Component {
 
     diagnosesspecials.forEach((item) => {
         diagnosisId.push(item["Issue"]["ID"]);
+        diagnosisName.push(item["Issue"]["Name"]);
         diagnosisRanking.push(item["Issue"]["Ranking"]);
         diagnosisAccuracy.push(item["Issue"]["Accuracy"]);
         item["Specialisation"].forEach((special) => {
@@ -266,6 +268,7 @@ class PatientDashboard extends React.Component {
         .doc()
         .set({
         DiagID: id,
+        DiagName: diagnosisName[index],
         accuracy: diagnosisAccuracy[index],
         ranking: diagnosisRanking[index],
         }).catch(function (error) {
