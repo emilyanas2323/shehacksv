@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { db } from "./firebaseConfig";
 
 var newDocRef = db.collection("Patients").doc();
+var newDoc_doctors = db.collection("Doctors");
 
 class PatientSignUp extends React.Component {
   constructor(props) {
@@ -31,6 +32,11 @@ class PatientSignUp extends React.Component {
   }
 
   addNewPatient() {
+    var doctorID = newDoc_doctors
+    .orderBy('doctorID','asc')
+    .limit(1)
+    .get().doctorID;
+
     newDocRef.set({
       patientID: newDocRef.id,
       firstName: document.getElementById('patientname').value,
@@ -40,7 +46,7 @@ class PatientSignUp extends React.Component {
       healthCard: document.getElementById('patienthealthCard').value,
       DOB: new Date(document.getElementById('patientDOB').value),
       gender: document.getElementById('patientGender').value,
-      doctorID: "test_doc_id",
+      doctorID: doctorID,
     }).catch(function (error) {
       console.log("Error writing to document:", error);
     });

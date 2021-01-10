@@ -247,7 +247,7 @@ class PatientDashboard extends React.Component {
 
     db
     .collection("Patients")
-    .doc("OTyVcLJC3tL2xSfyFFHY")
+    .doc(this.props.location.data)
     .collection("DailyEntries")
     .doc()
     .set({
@@ -261,10 +261,11 @@ class PatientDashboard extends React.Component {
     diagnosisId.forEach((id, index) => {
         db
         .collection("Patients")
-        .doc("OTyVcLJC3tL2xSfyFFHY")
+        .doc(this.props.location.data)
         .collection("PossibleDiagnosis")
-        .doc(""+id)
+        .doc()
         .set({
+        DiagID: id,
         accuracy: diagnosisAccuracy[index],
         ranking: diagnosisRanking[index],
         }).catch(function (error) {
@@ -275,10 +276,11 @@ class PatientDashboard extends React.Component {
     specialId.forEach((id, index) => {
         db
         .collection("Patients")
-        .doc("OTyVcLJC3tL2xSfyFFHY")
+        .doc(this.props.location.data)
         .collection("PossibleSpecializations")
-        .doc(""+id)
+        .doc()
         .set({
+        SpecialID: id,
         name: specialName[index],
         }).catch(function (error) {
         console.log("Error writing to document:", error);
