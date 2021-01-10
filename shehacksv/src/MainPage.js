@@ -2,7 +2,7 @@ import React from "react";
 import { Multiselect } from "multiselect-react-dropdown";
 import axios from "axios";
 import { res, proposed } from "./data.js";
-import "./SignUp.css";
+import "./App.css";
 import { Link } from "react-router-dom";
 
 class MainPage extends React.Component {
