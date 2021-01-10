@@ -336,31 +336,32 @@ export const diagnosesspecials = [
 ]
 
 export const proposed = [
-  {
-    "ID": 50,
-    "Name": "Diarrhea"
-  },
-  {
-    "ID": 154,
-    "Name": "Flatulence"
-  },
-  {
-    "ID": 235,
-    "Name": "Memory gap"
-  },
-  {
-    "ID": 16,
-    "Name": "Tiredness"
-  },
-  {
-    "ID": 101,
-    "Name": "Vomiting"
-  },
-  {
-    "ID": 11,
-    "Name": "Fever"
-  }
+{
+"ID":456,
+"Name":"Abscess of the tonsils"
+},
+{
+"ID":577,
+"Name":"Absence seizure"
+},
+{
+"ID":509,
+"Name":"Accumulation of fluid in the scrotum"
+},
+{
+"ID":171,
+"Name":"Achilles tendon tear"
+},
+{
+"ID":27,
+"Name":"Acne"
+},
+{
+"ID":586,
+"Name":"Blood poisoning"
+}
 ]
+
 
 export const res = [
   {
