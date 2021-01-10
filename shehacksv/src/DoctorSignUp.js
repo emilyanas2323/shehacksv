@@ -21,12 +21,8 @@ class DoctorSignUp extends React.Component {
   addNewDoctor() {
     // Pick first doctor
     var newDocRef = db.collection("Doctors").doc();
-    db.collection('Doctors').get().then(snap => {
-      var docSize = snap.size // will return the collection size
-    });
 
     newDocRef.set({
-      _id: 4,
       doctorID: newDocRef.id,
       firstName: document.getElementById('docname').value,
       lastName: document.getElementById('doclastname').value,
