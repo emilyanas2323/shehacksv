@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import PatientSignUp from "./PatientSignUp";
 import MainPage from "./MainPage";
 import DoctorSignUp from "./DoctorSignUp";
+import DoctorDashboard from "./DoctorDashboard";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -15,6 +16,8 @@ function App() {
           <Route exact path="/patientsignup" component={PatientSignUp} />
           <Route exact path="/doctorsignup" component={DoctorSignUp} />
           <Route exact path="/patientdashboard" component={PatientDashboard} />
+          <Route exact path="/doctordashboard" component={DoctorDashboard} />
+          
         </Switch>
       </div>
     </Router>
