@@ -767,7 +767,7 @@ class PatientDashboard1 extends React.Component {
                       <br></br>
                       {this.additionalSymptoms()}
                       <br></br>
-                      <h5>Search by Issues</h5>
+                      <h5>Search by Medical Condition</h5>
                       <div class="d-flex">
                         <p class="mr-2">
                           Please enter your mood from a scale of 1 to 5 (where 1
