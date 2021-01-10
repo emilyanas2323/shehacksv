@@ -1,3 +1,340 @@
+export const diagnosesspecials = [
+  {
+    "Issue": {
+      "ID": 281,
+      "Name": "Food poisoning",
+      "Accuracy": 90,
+      "Icd": "A05;A02;A03;A04",
+      "IcdName": "Other bacterial foodborne intoxications, not elsewhere classified;Other salmonella infections;Shigellosis;Other bacterial intestinal infections",
+      "ProfName": "Foodborne illness",
+      "Ranking": 1
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 84,
+      "Name": "Stomach flu",
+      "Accuracy": 81.8181839,
+      "Icd": "A02.0;A08;A09;J10.8;J11.8;K52",
+      "IcdName": "Salmonella enteritis;Viral and other specified intestinal infections;Other gastroenteritis and colitis of infectious and unspecified origin;Influenza with other manifestations, other influenza virus identified;Influenza with other manifestations, virus not identified;Other noninfective gastroenteritis and colitis",
+      "ProfName": "Gastroenteritis",
+      "Ranking": 2
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 126,
+      "Name": "Inflammation of the appendix",
+      "Accuracy": 49.0909081,
+      "Icd": "K35;K36;K37",
+      "IcdName": "Acute appendicitis;Other appendicitis;Unspecified appendicitis",
+      "ProfName": "Appendicitis",
+      "Ranking": 3
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      },
+      {
+        "ID": 39,
+        "Name": "Surgery",
+        "SpecialistID": 13
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 55,
+      "Name": "Gall stones",
+      "Accuracy": 44.18182,
+      "Icd": "K80",
+      "IcdName": "Cholelithiasis",
+      "ProfName": "Cholelithiasis",
+      "Ranking": 4
+    },
+    "Specialisation": [
+      {
+        "ID": 14,
+        "Name": "Gastroenterology",
+        "SpecialistID": 40
+      },
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 412,
+      "Name": "Urinary tract stones",
+      "Accuracy": 31.90909,
+      "Icd": "N21",
+      "IcdName": "Calculus of lower urinary tract",
+      "ProfName": "Urolithiasis in men",
+      "Ranking": 5
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      },
+      {
+        "ID": 26,
+        "Name": "Nephrology",
+        "SpecialistID": 47
+      },
+      {
+        "ID": 42,
+        "Name": "Urology",
+        "SpecialistID": 9
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 53,
+      "Name": "Problems with defecation",
+      "Accuracy": 26.181818,
+      "Icd": "K59.0",
+      "IcdName": "Constipation",
+      "ProfName": "Constipation",
+      "Ranking": 6
+    },
+    "Specialisation": [
+      {
+        "ID": 14,
+        "Name": "Gastroenterology",
+        "SpecialistID": 40
+      },
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 114,
+      "Name": "Inflammation of the stomach",
+      "Accuracy": 20.2909088,
+      "Icd": "K29.0;K29.1;K29.2;K29.3;K29.4;K29.5;K29.6;K29.7",
+      "IcdName": "Acute haemorrhagic gastritis;Other acute gastritis;Alcoholic gastritis;Chronic superficial gastritis;Chronic atrophic gastritis;Chronic gastritis, unspecified;Other gastritis;Gastritis, unspecified",
+      "ProfName": "Gastritis",
+      "Ranking": 7
+    },
+    "Specialisation": [
+      {
+        "ID": 14,
+        "Name": "Gastroenterology",
+        "SpecialistID": 40
+      },
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 443,
+      "Name": "Poisoning",
+      "Accuracy": 18.9,
+      "Icd": "T36;T37;T38;T39;T40;T41;T42;T43;T44;T45;T46;T47;T48;T49;T50",
+      "IcdName": "Poisoning by systemic antibiotics;Poisoning by other systemic anti-infectives and antiparasitics;Poisoning by hormones and their synthetic substitutes and antagonists, not elsewhere classified;Poisoning by nonopioid analgesics, antipyretics and antirheumatics;Poisoning by narcotics and psychodysleptics [hallucinogens];Poisoning by anaesthetics and therapeutic gases;Poisoning by antiepileptic, sedative-hypnotic and antiparkinsonism drugs;Poisoning by psychotropic drugs, not elsewhere classified;Poisoning by drugs primarily affecting the autonomic nervous system;Poisoning by primarily systemic and haematological agents, not elsewhere classified;Poisoning by agents primarily affecting the cardiovascular system;Poisoning by agents primarily affecting the gastrointestinal system;Poisoning by agents primarily acting on smooth and skeletal muscles and the respiratory system;Poisoning by topical agents primarily affecting skin and mucous membrane and by ophthalmological, otorhinolaryngological and dental drugs;Poisoning by diuretics and other and unspecified drugs, medicaments and biological substances",
+      "ProfName": "Intoxication",
+      "Ranking": 8
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 489,
+      "Name": "Menstrual problems",
+      "Accuracy": 16.363636,
+      "Icd": "N94.4;N94.5;N94.6",
+      "IcdName": "Primary dysmenorrhoea;Secondary dysmenorrhoea;Dysmenorrhoea, unspecified",
+      "ProfName": "Dysmenorrhoea",
+      "Ranking": 9
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 18,
+        "Name": "Gynecology",
+        "SpecialistID": 15
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 119,
+      "Name": "Inflammation of the pancreas",
+      "Accuracy": 15.545455,
+      "Icd": "K85;K86.0;K86.1",
+      "IcdName": "Acute pancreatitis;Alcohol-induced chronic pancreatitis;Other chronic pancreatitis",
+      "ProfName": "Pancreatitis",
+      "Ranking": 10
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 59,
+      "Name": "Urinary tract infection",
+      "Accuracy": 14.727273,
+      "Icd": "N39.0",
+      "IcdName": "Urinary tract infection, site not specified",
+      "ProfName": "Urinary tract infection in women",
+      "Ranking": 11
+    },
+    "Specialisation": [
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      },
+      {
+        "ID": 18,
+        "Name": "Gynecology",
+        "SpecialistID": 15
+      },
+      {
+        "ID": 19,
+        "Name": "Internal medicine",
+        "SpecialistID": 4
+      },
+      {
+        "ID": 26,
+        "Name": "Nephrology",
+        "SpecialistID": 47
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 494,
+      "Name": "Inflammation of a diverticulum",
+      "Accuracy": 14.727273,
+      "Icd": "K57",
+      "IcdName": "Diverticular disease of intestine",
+      "ProfName": "Diverticulitis",
+      "Ranking": 12
+    },
+    "Specialisation": [
+      {
+        "ID": 14,
+        "Name": "Gastroenterology",
+        "SpecialistID": 40
+      },
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      }
+    ]
+  },
+  {
+    "Issue": {
+      "ID": 273,
+      "Name": "Bowel obstruction",
+      "Accuracy": 10.4727268,
+      "Icd": "K56",
+      "IcdName": "Paralytic ileus and intestinal obstruction without hernia",
+      "ProfName": "Intestinal obstruction",
+      "Ranking": 13
+    },
+    "Specialisation": [
+      {
+        "ID": 14,
+        "Name": "Gastroenterology",
+        "SpecialistID": 40
+      },
+      {
+        "ID": 15,
+        "Name": "General practice",
+        "SpecialistID": 3
+      }
+    ]
+  }
+]
+
 export const proposed = [
 {
 "ID":456,

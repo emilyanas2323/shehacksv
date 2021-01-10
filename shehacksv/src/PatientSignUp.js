@@ -4,8 +4,54 @@ import axios from "axios";
 import { res, proposed } from "./data.js";
 import "./SignUp.css";
 import { Link } from "react-router-dom";
+import { db } from "./firebaseConfig";
+
+var newDocRef = db.collection("Patients").doc();
+var newDoc_doctors = db.collection("Doctors");
 
 class PatientSignUp extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleClick = this.handleClick.bind(this);
+
+    this.state = {
+      newPatientID: 0,
+    };
+  }
+   
+  componentDidMount () {
+    this.setState ({
+      newPatientID: newDocRef.id,
+    });
+  }
+
+  handleClick() {
+    console.log("handle click");
+    this.addNewPatient();
+  }
+
+  addNewPatient() {
+    var doctorID = newDoc_doctors
+    .orderBy('doctorID','asc')
+    .limit(1)
+    .get().doctorID;
+
+    newDocRef.set({
+      patientID: newDocRef.id,
+      firstName: document.getElementById('patientname').value,
+      lastName: document.getElementById('patientlastname').value,
+      email: document.getElementById('patientEmail').value,
+      password: document.getElementById('patientPassword').value,
+      healthCard: document.getElementById('patienthealthCard').value,
+      DOB: new Date(document.getElementById('patientDOB').value),
+      gender: document.getElementById('patientGender').value,
+      doctorID: doctorID,
+    }).catch(function (error) {
+      console.log("Error writing to document:", error);
+    });
+  }
+
   render() {
     return (
       <div className="container">
@@ -45,7 +91,7 @@ class PatientSignUp extends React.Component {
                           <input
                             type="email"
                             className="form-control form-control-user"
-                            id="exampleInputEmail"
+                            id="patientEmail"
                             aria-describedby="emailHelp"
                             placeholder="Enter Email Address..."
                           />
@@ -54,13 +100,13 @@ class PatientSignUp extends React.Component {
                           <input
                             type="password"
                             className="form-control form-control-user"
-                            id="exampleInputPassword"
+                            id="patientPassword"
                             placeholder="Password"
                           />
                         </div>
                         <div className="form-group">
                           <input
-                            type="txt"
+                            type="date"
                             className="form-control form-control-user"
                             id="patientDOB"
                             aria-describedby="emailHelp"
@@ -82,7 +128,7 @@ class PatientSignUp extends React.Component {
                             className="form-control form-control-user"
                             id="patientGender"
                             aria-describedby="emailHelp"
-                            placeholder="Gender: Male / Female"
+                            placeholder="Gender: male / female"
                           />
                         </div>
                         <div className="form-group">
@@ -101,8 +147,12 @@ class PatientSignUp extends React.Component {
                           </div>
                         </div>
                         <Link
-                          to="/patientdashboard"
+                          to={{
+                            pathname: "/patientdashboard",
+                            data: this.state.newPatientID,
+                          }}
                           className="btn btn-primary btn-user btn-block"
+                          onClick={this.handleClick}
                         >
                           Login
                         </Link>
