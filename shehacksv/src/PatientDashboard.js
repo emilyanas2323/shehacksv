@@ -1,7 +1,7 @@
 import React from "react";
 import { Multiselect } from "multiselect-react-dropdown";
 import axios from "axios";
-import { res, proposed } from "./data.js";
+import { res, proposed, diagnosesspecials } from "./data.js";
 import { db } from "./firebaseConfig";
 
 class PatientDashboard extends React.Component {
@@ -14,11 +14,13 @@ class PatientDashboard extends React.Component {
     this.onProposedRemove = this.onProposedRemove.bind(this);
     this.additionalSymptoms = this.additionalSymptoms.bind(this);
     this.updateProposedSymptoms = this.updateProposedSymptoms.bind(this);
+    this.submitSymptoms = this.submitSymptoms.bind(this);
 
     this.state = {
       options: [],
       selectedSymptoms: [],
       proposedSymptoms: [],
+      selectedProposedSymptoms: [],
       firstName: "",
       lastName: "",
       DOB: new Date(),
@@ -27,6 +29,7 @@ class PatientDashboard extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.location.data);
     const options = {
       method: "GET",
       url: "https://priaid-symptom-checker-v1.p.rapidapi.com/symptoms",
@@ -51,11 +54,11 @@ class PatientDashboard extends React.Component {
     //   });
 
     // using sample data
-    /*this.setState({
+    this.setState({
           options: res
-      })*/
+    })
 
-    var docRef = db.collection("Patients").doc("ZqlHkyxyukrONHYZq2bH");
+    var docRef = db.collection("Patients").doc(this.props.location.data);
     docRef
       .get()
       .then((doc) => {
@@ -114,9 +117,9 @@ class PatientDashboard extends React.Component {
     //     console.error(error);
     //   });
 
-    /*this.setState({
+    this.setState({
         proposedSymptoms: proposed
-    })*/
+    })
   }
 
   onSelect(selectedList, selectedItem) {
@@ -142,21 +145,21 @@ class PatientDashboard extends React.Component {
   }
 
   onProposedSelect(selectedList, selectedItem) {
-    let symptoms = this.state.proposedSymptoms;
+    let symptoms = this.state.selectedProposedSymptoms;
     symptoms.push(selectedItem);
     this.setState({
-      proposedSymptoms: symptoms,
+        selectedProposedSymptoms: symptoms,
     });
     console.log(symptoms);
   }
 
   onProposedRemove(selectedList, removedItem) {
-    let symptoms = this.state.proposedSymptoms;
+    let symptoms = this.state.selectedProposedSymptoms;
     symptoms = symptoms.filter(function (obj) {
       return obj.Name !== removedItem.Name;
     });
     this.setState({
-      proposedSymptoms: symptoms,
+        selectedProposedSymptoms: symptoms,
     });
     console.log(symptoms);
   }
@@ -177,12 +180,120 @@ class PatientDashboard extends React.Component {
     } else return null;
   }
 
+  submitSymptoms() {
+    let diagnosisId = []; 
+    let diagnosisRanking = [];
+    let diagnosisAccuracy = [];
+    let specialId = [];
+    let specialName = [];
+
+    let symptoms = "[";
+    this.state.selectedSymptoms.forEach((item) => {
+      symptoms += item.ID + ",";
+    });
+    this.state.selectedProposedSymptoms.forEach((item) => {
+        symptoms += item.ID + ",";
+      });
+    symptoms = symptoms.substring(0, symptoms.length - 1) + "]";
+    console.log(symptoms);
+    
+    const diagnosis = {
+      method: "GET",
+      url: 'https://priaid-symptom-checker-v1.p.rapidapi.com/diagnosis',
+      params: {
+        gender: this.state.gender,
+        year_of_birth: new Date(this.state.DOB).getFullYear(),
+        language: "en-gb",
+        symptoms: symptoms,
+      },
+      headers: {
+        "x-rapidapi-key": "71491ac6a2msh7ddcf0ac4b9fab3p189889jsn5cf483e878e0",
+        "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
+      },
+    };
+
+    // axios request
+    // axios
+    //   .request(diagnosis)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     response.data.forEach((item) => {
+    //         diagnosisId.push(item["Issue"]["ID"]);
+    //         diagnosisRanking.push(item["Issue"]["Ranking"]);
+    //         diagnosisAccuracy.push(item["Issue"]["Accuracy"]);
+    //         specialId.push(item["Specialization"]["ID"]);
+    //         specialName.push(item["Specialization"]["Name"]);
+    //     })
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
+
+    diagnosesspecials.forEach((item) => {
+        diagnosisId.push(item["Issue"]["ID"]);
+        diagnosisRanking.push(item["Issue"]["Ranking"]);
+        diagnosisAccuracy.push(item["Issue"]["Accuracy"]);
+        item["Specialisation"].forEach((special) => {
+            specialId.push(special["ID"]);
+            specialName.push(special["Name"]);
+        })
+    })
+
+    /*console.log(diagnosisId)
+    console.log(diagnosisRanking)
+    console.log(diagnosisAccuracy)
+    console.log(specialId)
+    console.log(specialName)*/
+
+    db
+    .collection("Patients")
+    .doc("OTyVcLJC3tL2xSfyFFHY")
+    .collection("DailyEntries")
+    .doc()
+    .set({
+      DatePosted: new Date(Date.now()),
+      Mood: document.getElementById("mood").value,
+      Symptoms: this.state.selectedSymptoms.concat(this.state.selectedProposedSymptoms),
+    }).catch(function (error) {
+      console.log("Error writing to document:", error);
+    });
+
+    diagnosisId.forEach((id, index) => {
+        db
+        .collection("Patients")
+        .doc("OTyVcLJC3tL2xSfyFFHY")
+        .collection("PossibleDiagnosis")
+        .doc(""+id)
+        .set({
+        accuracy: diagnosisAccuracy[index],
+        ranking: diagnosisRanking[index],
+        }).catch(function (error) {
+        console.log("Error writing to document:", error);
+        });
+    })
+
+    specialId.forEach((id, index) => {
+        db
+        .collection("Patients")
+        .doc("OTyVcLJC3tL2xSfyFFHY")
+        .collection("PossibleSpecializations")
+        .doc(""+id)
+        .set({
+        name: specialName[index],
+        }).catch(function (error) {
+        console.log("Error writing to document:", error);
+        });
+    })
+  }
+
   render() {
     return (
-      <div>
+      <div className="patient-dashboard-container">
         <h1 className="text-center">Patient Dashboard</h1>
         <h2>Create A New Entry</h2>
         <h3>Search by symptoms</h3>
+        <p>Please enter your mood from a scale of 1 to 5 (where 1 is poor, 5 is excellent):</p>
+        <input id="mood" type="number" min="1" max="5" />
         <p>Please select the symptoms you are experiencing:</p>
         <Multiselect
           options={this.state.options} // Options to display in the dropdown
@@ -191,7 +302,7 @@ class PatientDashboard extends React.Component {
           displayValue="Name" // Property name to display in the dropdown options
         />
         {this.additionalSymptoms()}
-        <div className="btn btn-primary">Submit</div>
+        <div className="btn btn-primary" onClick={this.submitSymptoms}>Submit</div>
       </div>
     );
   }

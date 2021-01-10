@@ -11246,3 +11246,7 @@
     width: 100%;
   }
   
+.patient-dashboard-container {
+  background-color: white;
+  min-width: 100vh;
+}

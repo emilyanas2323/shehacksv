@@ -6,11 +6,23 @@ import "./SignUp.css";
 import { Link } from "react-router-dom";
 import { db } from "./firebaseConfig";
 
+var newDocRef = db.collection("Patients").doc();
+
 class PatientSignUp extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
+
+    this.state = {
+      newPatientID: 0,
+    };
+  }
+   
+  componentDidMount () {
+    this.setState ({
+      newPatientID: newDocRef.id,
+    });
   }
 
   handleClick() {
@@ -19,7 +31,6 @@ class PatientSignUp extends React.Component {
   }
 
   addNewPatient() {
-    var newDocRef = db.collection("Patients").doc();
     newDocRef.set({
       patientID: newDocRef.id,
       firstName: document.getElementById('patientname').value,
@@ -27,7 +38,7 @@ class PatientSignUp extends React.Component {
       email: document.getElementById('patientEmail').value,
       password: document.getElementById('patientPassword').value,
       healthCard: document.getElementById('patienthealthCard').value,
-      DOB:new Date(document.getElementById('patientDOB').value),
+      DOB: new Date(document.getElementById('patientDOB').value),
       gender: document.getElementById('patientGender').value,
       doctorID: "test_doc_id",
     }).catch(function (error) {
@@ -130,7 +141,10 @@ class PatientSignUp extends React.Component {
                           </div>
                         </div>
                         <Link
-                          to="/patientdashboard"
+                          to={{
+                            pathname: "/patientdashboard",
+                            data: this.state.newPatientID,
+                          }}
                           className="btn btn-primary btn-user btn-block"
                           onClick={this.handleClick}
                         >
