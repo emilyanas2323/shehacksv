@@ -38,17 +38,17 @@ class PatientDashboard extends React.Component {
     };
 
     // axios request
-    axios
-      .request(options)
-      .then((response) => {
-        console.log(response.data);
-        this.setState({
-          options: response.data,
-        });
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    // axios
+    //   .request(options)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     this.setState({
+    //       options: response.data,
+    //     });
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
 
     // using sample data
     /*this.setState({
@@ -102,17 +102,17 @@ class PatientDashboard extends React.Component {
     console.log(options.params.year_of_birth);
 
     // axios request
-    axios
-      .request(options)
-      .then((response) => {
-        console.log(response.data);
-        this.setState({
-          proposedSymptoms: response.data,
-        });
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
+    // axios
+    //   .request(options)
+    //   .then((response) => {
+    //     console.log(response.data);
+    //     this.setState({
+    //       proposedSymptoms: response.data,
+    //     });
+    //   })
+    //   .catch(function (error) {
+    //     console.error(error);
+    //   });
 
     /*this.setState({
         proposedSymptoms: proposed
