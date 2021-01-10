@@ -172,7 +172,7 @@ class PatientSignUp extends React.Component {
                         </div>
                         <Link
                           to={{
-                            pathname: "/patientdashboard1",
+                            pathname: "/patientdashboard",
                             data: this.state.newPatientID,
                           }}
                           className="btn btn-primary btn-user btn-block"

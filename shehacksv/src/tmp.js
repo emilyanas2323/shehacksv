@@ -56,7 +56,7 @@ class PatientDashboard1 extends React.Component {
       url: "https://priaid-symptom-checker-v1.p.rapidapi.com/symptoms",
       params: { language: "en-gb", format: "json" },
       headers: {
-        "x-rapidapi-key": "a4dc6a92bemshd411cecf19a1136p197d8ejsnace6d7bd4d5e",
+        "x-rapidapi-key": "5036017efcmsh867db4f8336388dp17b645jsn9e482eeeab6d",
         "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
       },
     };
@@ -66,7 +66,7 @@ class PatientDashboard1 extends React.Component {
       url: "https://priaid-symptom-checker-v1.p.rapidapi.com/issues",
       params: { language: "en-gb", format: "json" },
       headers: {
-        "x-rapidapi-key": "a4dc6a92bemshd411cecf19a1136p197d8ejsnace6d7bd4d5e",
+        "x-rapidapi-key": "5036017efcmsh867db4f8336388dp17b645jsn9e482eeeab6d",
         "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
       },
     };
@@ -141,7 +141,7 @@ class PatientDashboard1 extends React.Component {
         symptoms: symptoms,
       },
       headers: {
-        "x-rapidapi-key": "a4dc6a92bemshd411cecf19a1136p197d8ejsnace6d7bd4d5e",
+        "x-rapidapi-key": "5036017efcmsh867db4f8336388dp17b645jsn9e482eeeab6d",
         "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
       },
     };
@@ -180,7 +180,7 @@ class PatientDashboard1 extends React.Component {
         issue_id: issueid,
       },
       headers: {
-        "x-rapidapi-key": "a4dc6a92bemshd411cecf19a1136p197d8ejsnace6d7bd4d5e",
+        "x-rapidapi-key": "5036017efcmsh867db4f8336388dp17b645jsn9e482eeeab6d",
         "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
       },
     };
@@ -347,7 +347,7 @@ class PatientDashboard1 extends React.Component {
         symptoms: symptoms,
       },
       headers: {
-        "x-rapidapi-key": "71491ac6a2msh7ddcf0ac4b9fab3p189889jsn5cf483e878e0",
+        "x-rapidapi-key": "5036017efcmsh867db4f8336388dp17b645jsn9e482eeeab6d",
         "x-rapidapi-host": "priaid-symptom-checker-v1.p.rapidapi.com",
       },
     };

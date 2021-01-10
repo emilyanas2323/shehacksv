@@ -233,8 +233,11 @@ class DoctorDashboard extends React.Component {
           <hr className="sidebar-divider my-0" />
 
           <li className="nav-item">
-            <a className="nav-link collapsed" href="#">
-              <span>Jane Doe</span>
+            <a
+              className="nav-link collapsed"
+              href="#"
+            >
+              <span>Mary Sue</span>
             </a>
           </li>
 
@@ -362,15 +365,18 @@ class DoctorDashboard extends React.Component {
 
             <div className="container-fluid">
               <div className="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 className="h3 mb-0 text-gray-800">Jim Halpert</h1>
+                <h1 className="h3 mb-0 text-gray-800">{this.state.firstName + " " + this.state.lastName}</h1>
                 <a
                   href="#doctorNotes"
                   className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                 >
-                  <IconContext.Provider value={{}}>
-                    <FiDownload />
-                  </IconContext.Provider>{" "}
-                  Generate Report
+                   <IconContext.Provider
+                            value={{
+                             
+                            }}
+                          >
+                            <FiDownload />
+                          </IconContext.Provider> Add A Recommendation
                 </a>
               </div>
 
