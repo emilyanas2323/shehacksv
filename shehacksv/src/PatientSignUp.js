@@ -27,7 +27,7 @@ class PatientSignUp extends React.Component {
       email: document.getElementById('patientEmail').value,
       password: document.getElementById('patientPassword').value,
       healthCard: document.getElementById('patienthealthCard').value,
-      DOB:new Date(document.getElementById('patientDOB').value),
+      DOB: new Date(document.getElementById('patientDOB').value),
       gender: document.getElementById('patientGender').value,
       doctorID: "test_doc_id",
     }).catch(function (error) {
