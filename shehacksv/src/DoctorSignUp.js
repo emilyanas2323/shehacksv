@@ -117,7 +117,7 @@ class DoctorSignUp extends React.Component {
                           </div>
                         </div>
                         <Link
-                          to="/patientdashboard"
+                          to="/doctordashboard"
                           className="btn btn-primary btn-user btn-block"
                           onClick={this.handleClick}
                         >
