@@ -95,7 +95,7 @@ class PatientDashboard extends React.Component {
     var docRef = db.collection("Patients").doc(this.props.location.data);
     docRef
       .get()
-      .then((doc) => {
+      .then((doc) => { 
         if (doc.exists) {
           console.log("Document data:", doc.data());
           this.setState({
@@ -439,9 +439,20 @@ class PatientDashboard extends React.Component {
           displayValue="Name" // Property name to display in the dropdown options
         />
         {this.additionalSymptoms()}
+
+        <h3>Search by issues</h3>
+        <p>Please enter your mood from a scale of 1 to 5 (where 1 is poor, 5 is excellent):</p>
+        <input id="mood" type="number" min="1" max="5" />
+        <p>Please select issues you may be experiencing:</p>
+        <Multiselect
+          options={this.state.optionsIssues} // Options to display in the dropdown
+          onSelect={this.onSelectIssue} // Function will trigger on select event
+          onRemove={this.onRemoveIssue} // Function will trigger on remove event
+          displayValue="Name" // Property name to display in the dropdown options
+        />
+        {this.additionalIssues()}
         <div className="btn btn-primary">Submit</div>
       </div>
-
     );
   }
 }

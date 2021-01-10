@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
+    "chart.js": "^2.9.4",
     "firebase": "^8.2.2",
     "multiselect-react-dropdown": "^1.6.3",
     "react": "^17.0.1",

@@ -12,110 +12,240 @@ import { FiUserCheck } from "react-icons/fi";
 import { FiBook } from "react-icons/fi";
 import { FiBell } from "react-icons/fi";
 import { FiDownload } from "react-icons/fi";
-
-
+import Chart from 'chart.js';
+import { db } from "./firebaseConfig";
 
 class DoctorDashboard extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.getPatientInfo = this.getPatientInfo.bind(this);
+
+    this.state = {
+      patientIds: [],
+      firstName: "",
+      lastName: "",
+      moods: [],
+      diagnoses: [],
+      specialisations: []
+    };
+  }
+
+  initializeChart() {
+    console.log(this.state.moods)
+    new Chart(document.getElementById("myChart"), {
+      type: 'line',
+      data: {
+        labels: ["Mon","Tue","Wed","Thu"],
+        datasets: [{ 
+            data: this.state.moods,
+            // data: [2,4,3,5]
+            label: "Patient's Reported Mood",
+            borderColor: "#8e5ea2",
+            fill: false
+          }
+        ]
+      },
+      options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+    });  
+  }
+
+  getPatientInfo() {
+    var docRef = db.collection("Doctors").doc("2TEZiTy2YZf4lcDwCski");
+    let patients = [];
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          //console.log("Document data:", doc.data().assignedPatients);
+          patients = this.state.patientIds;
+          for(let i = 0; i<doc.data().assignedPatients.length; i++) {
+            patients.push(doc.data().assignedPatients[i]);
+          }
+          let patient = patients[0];
+            var docRef = db.collection("Patients").doc(patient);
+            docRef
+              .get()
+              .then((doc) => {
+                if (doc.exists) {
+                  //console.log("Document data:", doc.data());
+                  this.setState({
+                    firstName: doc.data().firstName,
+                    lastName: doc.data().lastName
+                  });
+                } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!");
+                }
+              })
+              .catch(function (error) {
+                console.log("Error getting document:", error);
+              });
+
+            let patientMood = this.state.moods;
+            docRef = db.collection("Patients").doc(patient).collection("DailyEntries");
+            docRef
+              .get()
+              .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                      // doc.data() is never undefined for query doc snapshots
+                      console.log(doc.id, " => ", doc.data().Mood);
+                      patientMood.push(parseInt(doc.data().Mood));
+                  });
+                  this.setState({
+                    moods: patientMood    
+                  })
+              })
+              .catch(function(error) {
+                  console.log("Error getting documents: ", error);
+              });
+
+            let patientDiag = this.state.diagnoses;
+            docRef = db.collection("Patients").doc(patient).collection("PossibleDiagnosis");
+            docRef
+              .get()
+              .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                      // doc.data() is never undefined for query doc snapshots
+                      patientDiag.push(doc.data().DiagID);
+                  });
+                  this.setState({
+                    moods: patientDiag    
+                  })
+              })
+              .catch(function(error) {
+                  console.log("Error getting documents: ", error);
+              });
+
+            let patientSpec = this.state.specialisations;
+            docRef = db.collection("Patients").doc(patient).collection("PossibleSpecializations");
+            docRef
+              .get()
+              .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                      // doc.data() is never undefined for query doc snapshots
+                      patientSpec.push(doc.data().name);
+                  });
+                  this.setState({
+                    moods: patientSpec    
+                  })
+              })
+              .catch(function(error) {
+                  console.log("Error getting documents: ", error);
+              });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });    
+
+      console.log(this.state.moods)
+      console.log(this.state.diagnoses)
+      console.log(this.state.specialisations)
+  }
+
+  componentDidMount() {
+      this.getPatientInfo();
+      this.initializeChart();
+  }
+
   render() {
     return (
       <div id="wrapper">
         <ul
-          class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+          className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
           id="accordionSidebar"
         >
           <a
-            class="sidebar-brand d-flex align-items-center justify-content-center"
+            className="sidebar-brand d-flex align-items-center justify-content-center"
             href="index.html"
           >
-            <div class="sidebar-brand-icon rotate-n-15">
-              <i class="fas fa-laugh-wink"></i>
+            <div className="sidebar-brand-icon rotate-n-15">
+              <i className="fas fa-laugh-wink"></i>
             </div>
-            <div class="sidebar-brand-text mx-3">
+            <div className="sidebar-brand-text mx-3">
               Dr. Scott<sup></sup>
             </div>
           </a>
 
-          <hr class="sidebar-divider my-0" />
+          <div className="sidebar-heading">Patients</div>
 
-          <li class="nav-item active">
-            <a class="nav-link" href="index.html">
-              <i class="fas fa-fw fa-tachometer-alt"></i>
-              <span>Jim Halpert</span>
+          <hr className="sidebar-divider mb-0" />
+
+          <li className="nav-item active">
+            <a className="nav-link" href="">
+              <i className="fas fa-fw fa-tachometer-alt"></i>
+              <span>{this.state.firstName + " " + this.state.lastName}</span>
             </a>
           </li>
 
-          <hr class="sidebar-divider" />
+          <hr className="sidebar-divider my-0" />
 
-          <div class="sidebar-heading">Functionalities</div>
-
-          <li class="nav-item">
+          <li className="nav-item">
             <a
-              class="nav-link collapsed"
+              className="nav-link collapsed"
               href="#"
-              data-toggle="collapse"
-              data-target="#collapseTwo"
-              aria-expanded="true"
-              aria-controls="collapseTwo"
             >
-              <i class="fas fa-fw fa-cog"></i>
-              <span>Settings</span>
+              <span>John Doe</span>
             </a>
-            <div
-              id="collapseTwo"
-              class="collapse"
-              aria-labelledby="headingTwo"
-              data-parent="#accordionSidebar"
-            >
-              <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Patient Referral</h6>
-                <a class="collapse-item" href="buttons.html">
-                  Email
-                </a>
-                <a class="collapse-item" href="cards.html">
-                  Refer Account
-                </a>
-              </div>
-            </div>
           </li>
 
-          <hr class="sidebar-divider" />
+          <hr className="sidebar-divider my-0" />
 
-          <div class="text-center d-none d-md-inline">
-            <button class="rounded-circle border-0" id="sidebarToggle"></button>
-          </div>
+          <li className="nav-item">
+            <a
+              className="nav-link collapsed"
+              href="#"
+            >
+              <span>Jane Doe</span>
+            </a>
+          </li>
+
+          <hr className="sidebar-divider my-0" />
         </ul>
 
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
               <button
                 id="sidebarToggleTop"
-                class="btn btn-link d-md-none rounded-circle mr-3"
+                className="btn btn-link d-md-none rounded-circle mr-3"
               >
-                <i class="fa fa-bars"></i>
+                <i className="fa fa-bars"></i>
               </button>
 
-              <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                <div class="input-group">
+              <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                {/* <div className="input-group">
                   <input
                     type="text"
-                    class="form-control bg-light border-0 small"
+                    className="form-control bg-light border-0 small"
                     placeholder="Search for..."
                     aria-label="Search"
                     aria-describedby="basic-addon2"
                   />
-                  <div class="input-group-append">
-                    <button class="btn btn-primary" type="button">
-                      <i class="fas fa-search fa-sm"></i>
+                  <div className="input-group-append">
+                    <button className="btn btn-primary" type="button">
+                      <i className="fas fa-search fa-sm"></i>
                     </button>
                   </div>
-                </div>
+                </div> */}
               </form>
 
-              <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown no-arrow d-sm-none">
+              <ul className="navbar-nav ml-auto">
+                <li className="nav-item dropdown no-arrow d-sm-none">
                   <a
-                    class="nav-link dropdown-toggle"
+                    className="nav-link dropdown-toggle"
                     href="#"
                     id="searchDropdown"
                     role="button"
@@ -123,25 +253,25 @@ class DoctorDashboard extends React.Component {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <i class="fas fa-search fa-fw"></i>
+                    <i className="fas fa-search fa-fw"></i>
                   </a>
 
                   <div
-                    class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                    className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
                     aria-labelledby="searchDropdown"
                   >
-                    <form class="form-inline mr-auto w-100 navbar-search">
-                      <div class="input-group">
+                    <form className="form-inline mr-auto w-100 navbar-search">
+                      <div className="input-group">
                         <input
                           type="text"
-                          class="form-control bg-light border-0 small"
+                          className="form-control bg-light border-0 small"
                           placeholder="Search for..."
                           aria-label="Search"
                           aria-describedby="basic-addon2"
                         />
-                        <div class="input-group-append">
-                          <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search fa-sm"></i>
+                        <div className="input-group-append">
+                          <button className="btn btn-primary" type="button">
+                            <i className="fas fa-search fa-sm"></i>
                           </button>
                         </div>
                       </div>
@@ -149,11 +279,11 @@ class DoctorDashboard extends React.Component {
                   </div>
                 </li>
 
-                <div class="topbar-divider d-none d-sm-block"></div>
+                <div className="topbar-divider d-none d-sm-block"></div>
 
-                <li class="nav-item dropdown no-arrow">
+                <li className="nav-item dropdown no-arrow">
                   <a
-                    class="nav-link dropdown-toggle"
+                    className="nav-link dropdown-toggle"
                     href="#"
                     id="userDropdown"
                     role="button"
@@ -161,7 +291,7 @@ class DoctorDashboard extends React.Component {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                    <span className="mr-2 d-none d-lg-inline text-gray-600 small">
                       Micheal Scott
                     </span>
                     <IconContext.Provider
@@ -174,29 +304,29 @@ class DoctorDashboard extends React.Component {
                   </a>
 
                   <div
-                    class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                    className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                     aria-labelledby="userDropdown"
                   >
-                    <a class="dropdown-item" href="#">
-                      <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <a className="dropdown-item" href="#">
+                      <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                       Profile
                     </a>
-                    <a class="dropdown-item" href="#">
-                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <a className="dropdown-item" href="#">
+                      <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                       Settings
                     </a>
-                    <a class="dropdown-item" href="#">
-                      <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <a className="dropdown-item" href="#">
+                      <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                       Activity Log
                     </a>
-                    <div class="dropdown-divider"></div>
+                    <div className="dropdown-divider"></div>
                     <a
-                      class="dropdown-item"
+                      className="dropdown-item"
                       href="#"
                       data-toggle="modal"
                       data-target="#logoutModal"
                     >
-                      <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                      <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                       Logout
                     </a>
                   </div>
@@ -204,12 +334,12 @@ class DoctorDashboard extends React.Component {
               </ul>
             </nav>
 
-            <div class="container-fluid">
-              <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800">Jim Halpert</h1>
+            <div className="container-fluid">
+              <div className="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 className="h3 mb-0 text-gray-800">Jim Halpert</h1>
                 <a
                   href="#"
-                  class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
+                  className="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"
                 >
                    <IconContext.Provider
                             value={{
@@ -222,20 +352,20 @@ class DoctorDashboard extends React.Component {
                 </a>
               </div>
 
-              <div class="row">
-                <div class="col-xl-3 col-md-6 mb-4">
-                  <div class="card border-left-primary shadow h-100 py-2">
-                    <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Appointment
+              <div className="row">
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Next Appointment
                           </div>
-                          <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            3 Jan 2021
+                          <div className="h5 mb-0 font-weight-bold text-gray-800">
+                            23 Jan 2021
                           </div>
                         </div>
-                        <div class="col-auto">
+                        <div className="col-auto">
                           <IconContext.Provider
                             value={{
                               className: "icon-class",
@@ -249,19 +379,19 @@ class DoctorDashboard extends React.Component {
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6 mb-4">
-                  <div class="card border-left-success shadow h-100 py-2">
-                    <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-success shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Insurance Coverage
                           </div>
-                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <div className="h5 mb-0 font-weight-bold text-gray-800">
                             $2245.00
                           </div>
                         </div>
-                        <div class="col-auto">
+                        <div className="col-auto">
                         <IconContext.Provider
                             value={{
                               className: "icon-class",
@@ -275,24 +405,24 @@ class DoctorDashboard extends React.Component {
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6 mb-4">
-                  <div class="card border-left-info shadow h-100 py-2">
-                    <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                            Health Progress
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-info shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Recovery Progress
                           </div>
-                          <div class="row no-gutters align-items-center">
-                            <div class="col-auto">
-                              <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                          <div className="row no-gutters align-items-center">
+                            <div className="col-auto">
+                              <div className="h5 mb-0 mr-3 font-weight-bold text-gray-800">
                                 54%
                               </div>
                             </div>
-                            <div class="col">
-                              <div class="progress progress-sm mr-2">
+                            <div className="col">
+                              <div className="progress progress-sm mr-2">
                                 <div
-                                  class="progress-bar bg-info"
+                                  className="progress-bar bg-info"
                                   role="progressbar"
                                   aria-valuenow="50"
                                   aria-valuemin="0"
@@ -302,7 +432,7 @@ class DoctorDashboard extends React.Component {
                             </div>
                           </div>
                         </div>
-                        <div class="col-auto">
+                        <div className="col-auto">
                         <IconContext.Provider
                             value={{
                               className: "icon-class",
@@ -316,19 +446,19 @@ class DoctorDashboard extends React.Component {
                   </div>
                 </div>
 
-                <div class="col-xl-3 col-md-6 mb-4">
-                  <div class="card border-left-warning shadow h-100 py-2">
-                    <div class="card-body">
-                      <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                          <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            Alert
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-warning shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Alert(s)
                           </div>
-                          <div class="h5 mb-0 font-weight-bold text-gray-800">
+                          <div className="h5 mb-0 font-weight-bold text-gray-800">
                             3
                           </div>
                         </div>
-                        <div class="col-auto">
+                        <div className="col-auto">
                         <IconContext.Provider
                             value={{
                               className: "icon-class",
@@ -343,30 +473,30 @@ class DoctorDashboard extends React.Component {
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-xl-8 col-lg-7">
-                  <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">
+              <div className="row">
+                <div className="col-xl-8 col-lg-7">
+                  <div className="card shadow mb-4">
+                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 className="m-0 font-weight-bold text-primary">
                         Overall Health Status
                       </h6>
                     </div>
 
-                    <div class="card-body">
-                      <div class="chart-area">
-                        <canvas id="myAreaChart"></canvas>
+                    <div className="card-body">
+                      <div className="chart-area">
+                        <canvas id="myChart" height="150" width="400"></canvas>
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <div class="col-xl-4 col-lg-5">
-                  <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                      <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
-                      <div class="dropdown no-arrow">
+                <div className="d-flex flex-column col-xl-4 col-lg-5">
+                <div className="">
+                  <div className="card shadow mb-4">
+                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 className="m-0 font-weight-bold text-primary">Potential Diagnoses</h6>
+                      <div className="dropdown no-arrow">
                         <a
-                          class="dropdown-toggle"
+                          className="dropdown-toggle"
                           href="#"
                           role="button"
                           id="dropdownMenuLink"
@@ -374,47 +504,92 @@ class DoctorDashboard extends React.Component {
                           aria-haspopup="true"
                           aria-expanded="false"
                         >
-                          <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                          <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                         </a>
                         <div
-                          class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                          className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                           aria-labelledby="dropdownMenuLink"
                         >
-                          <div class="dropdown-header">Dropdown Header:</div>
-                          <a class="dropdown-item" href="#">
+                          <div className="dropdown-header">Dropdown Header:</div>
+                          <a className="dropdown-item" href="#">
                             Action
                           </a>
-                          <a class="dropdown-item" href="#">
+                          <a className="dropdown-item" href="#">
                             Another action
                           </a>
-                          <div class="dropdown-divider"></div>
-                          <a class="dropdown-item" href="#">
+                          <div className="dropdown-divider"></div>
+                          <a className="dropdown-item" href="#">
                             Something else here
                           </a>
                         </div>
                       </div>
                     </div>
 
-                    <div class="card-body">
-                      <p>
-                        Dec 25 2020: Hard to wake up in the morning, I get a lot
-                        of body pain and I get it throughout the day as well
-                        <hr />
-                        Dec 12 2020: Stomach ache, and constipation for 4 or 5
-                        days and its not going away
-                        <hr />
-                        Dec 5 2020: Want to book an appointment with you in
-                        2021, see you soon
-                      </p>
+                    <div className="card-body">
+                      <p>Diagnosis 1: {this.state.diagnoses[0]}</p>
+                      <hr />
+                      <p>Diagnosis 2: {this.state.diagnoses[1]}</p>
                       <a
                         target="_blank"
                         rel="nofollow"
-                        href="https://undraw.co/"
+                        href=""
                       >
-                        See more Notes --
+                        See More
                       </a>
                     </div>
                   </div>
+                </div>
+
+              
+                <div className="">
+                  <div className="card shadow mb-4">
+                    <div className="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                      <h6 className="m-0 font-weight-bold text-primary">Potential Specialisations</h6>
+                      <div className="dropdown no-arrow">
+                        <a
+                          className="dropdown-toggle"
+                          href="#"
+                          role="button"
+                          id="dropdownMenuLink"
+                          data-toggle="dropdown"
+                          aria-haspopup="true"
+                          aria-expanded="false"
+                        >
+                          <i className="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                        </a>
+                        <div
+                          className="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                          aria-labelledby="dropdownMenuLink"
+                        >
+                          <div className="dropdown-header">Dropdown Header:</div>
+                          <a className="dropdown-item" href="#">
+                            Action
+                          </a>
+                          <a className="dropdown-item" href="#">
+                            Another action
+                          </a>
+                          <div className="dropdown-divider"></div>
+                          <a className="dropdown-item" href="#">
+                            Something else here
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="card-body">
+                      <p>Specialisation 1: {this.state.specialisations[0]}</p>
+                      <hr />
+                      <p>Specialisation 2: {this.state.specialisations[1]}</p>
+                      <a
+                        target="_blank"
+                        rel="nofollow"
+                        href=""
+                      >
+                        See More
+                      </a>
+                    </div>
+                  </div>
+                </div>
                 </div>
               </div>
             </div>
