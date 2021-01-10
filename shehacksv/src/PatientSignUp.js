@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { db } from "./firebaseConfig";
 
 var newDocRef = db.collection("Patients").doc();
-var newDoc_doctors = db.collection("Doctors");
 
 class PatientSignUp extends React.Component {
   constructor(props) {
@@ -17,11 +16,13 @@ class PatientSignUp extends React.Component {
 
     this.state = {
       newPatientID: 0,
+      doctorID: "2TEZiTy2YZf4lcDwCski",
+      assignedPatients: [],
     };
   }
-   
-  componentDidMount () {
-    this.setState ({
+
+  componentDidMount() {
+    this.setState({
       newPatientID: newDocRef.id,
     });
   }
@@ -32,24 +33,47 @@ class PatientSignUp extends React.Component {
   }
 
   addNewPatient() {
-    var doctorID = newDoc_doctors
-    .orderBy('doctorID','asc')
-    .limit(1)
-    .get().doctorID;
+    newDocRef
+      .set({
+        patientID: newDocRef.id,
+        firstName: document.getElementById("patientname").value,
+        lastName: document.getElementById("patientlastname").value,
+        email: document.getElementById("patientEmail").value,
+        password: document.getElementById("patientPassword").value,
+        healthCard: document.getElementById("patienthealthCard").value,
+        DOB: new Date(document.getElementById("patientDOB").value),
+        gender: document.getElementById("patientGender").value,
+        doctorID: this.state.doctorID,
+      })
+      .catch(function (error) {
+        console.log("Error writing to document:", error);
+      });
 
-    newDocRef.set({
-      patientID: newDocRef.id,
-      firstName: document.getElementById('patientname').value,
-      lastName: document.getElementById('patientlastname').value,
-      email: document.getElementById('patientEmail').value,
-      password: document.getElementById('patientPassword').value,
-      healthCard: document.getElementById('patienthealthCard').value,
-      DOB: new Date(document.getElementById('patientDOB').value),
-      gender: document.getElementById('patientGender').value,
-      doctorID: doctorID,
-    }).catch(function (error) {
-      console.log("Error writing to document:", error);
-    });
+    // db.collection("Doctors")
+    //   .doc("5GG2eRmUVqIUkPgKRNKv")
+    //   .get()
+    //   .then((doc) => {
+    //     if (doc.exists) {
+    //       this.setState({
+    //         assignedPatients: doc.data().assignedPatients,
+    //       });
+    //     } else {
+    //       // doc.data() will be undefined in this case
+    //       console.log("No such document!");
+    //     }
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error getting document:", error);
+    //   });
+
+    // db.collection("Doctors")
+    //   .doc("5GG2eRmUVqIUkPgKRNKv")
+    //   .set({
+    //     assignedPatients: this.state.assignedPatients.push(this.state.newPatientID),
+    //   })
+    //   .catch(function (error) {
+    //     console.log("Error writing to document:", error);
+    //   });
   }
 
   render() {
